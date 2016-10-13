@@ -12,13 +12,13 @@ function initialize(jsonParsed) {
     var map = new google.maps.Map(document.getElementById('googleMap'), mapProp); // map object
 
 
-    for (var value in nycOpenData){
-      var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(nycOpenData[value].location_1.coordinates[1], nycOpenData[value].location_1.coordinates[0]),
-        title: 'map911'
-      });
-      //console.log(nycOpenData[value].location_1.coordinates[1]+'  ' +nycOpenData[value].location_1.coordinates[0])
-      marker.setMap(map);
+    for (var value in nycOpenData) {
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(nycOpenData[value].location_1.coordinates[1], nycOpenData[value].location_1.coordinates[0]),
+            title: 'map911'
+        });
+        //console.log(nycOpenData[value].location_1.coordinates[1]+'  ' +nycOpenData[value].location_1.coordinates[0])
+        marker.setMap(map);
 
     }
 
@@ -37,7 +37,8 @@ function initialize(jsonParsed) {
 //AJAX request to
 function startRequest() {
     var httpRequest;
-    var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006';
+    //Added multiple queries--- TODO: Make navigation bar for user to input these queries to make easy to read.
+    var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense=ROBBERY&borough=BROOKLYN';
     var testData;
 
     httpRequest = new XMLHttpRequest();
@@ -67,9 +68,9 @@ function startRequest() {
     return JSONobject;
 }
 
-function parsingJSONRequest(text){
-  var JSONobject = JSON.parse(text);
-  return JSONobject;
+function parsingJSONRequest(text) {
+    var JSONobject = JSON.parse(text);
+    return JSONobject;
 }
 
 
