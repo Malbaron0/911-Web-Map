@@ -2,6 +2,7 @@
 //initialize google map.
 function initialize(jsonParsed) {
 
+    var mapCanvas = document.getElementById('googleMap');
     var nycOpenData = jsonParsed;
     var myCenter = new google.maps.LatLng(40.5989055802915, -74.00132831970851);
     var mapProp = {
@@ -9,7 +10,7 @@ function initialize(jsonParsed) {
         zoom: 12,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById('googleMap'), mapProp); // map object
+    var map = new google.maps.Map(mapCanvas, mapProp); // map object
 
 
     for (var value in nycOpenData) {
@@ -30,8 +31,6 @@ function initialize(jsonParsed) {
     */
     //infowindow.open(map, marker);
 }
-
-
 
 
 //AJAX request to
@@ -74,7 +73,17 @@ function parsingJSONRequest(text) {
 }
 
 
-document.getElementById("testing").addEventListener('click', function() {
+document.getElementById("searchButton").addEventListener('click', function() {
+    //get the selected value in the select element and assign it to the query.
+    if(document.getElementById('crimeSelector').value == 'Burglary'){
+      alert("Burglary");
+    }
+    if(document.getElementById('crimeSelector').value == 'Robbery'){
+      alert("Robbery");
+    }
+    if(document.getElementById('crimeSelector').value == 'Grand Larceny'){
+      alert("Grand Larceny");
+    }
     var jsontext = startRequest();
     initialize(jsontext);
 }, false);
