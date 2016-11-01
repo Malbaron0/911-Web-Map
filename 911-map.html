@@ -8,28 +8,61 @@
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
+    <!--bootstrap-select is a plugin to style the select element-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css">
+
     <!--bootstrap-->
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #googleMap {
-        height: 100%;
-      }
-    </style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
+        #googleMap {
+            height: 100%;
+        }
+
+        .dropdownNav {
+            position: relative;
+            ;
+        }
+    </style>
 
 </head>
 
 <body>
     <h1>NY 911 Map</h1>
-    <button id="testing">Testing</button>
-    <div id="jsonresp">hello
+
+    <div class="container">
+        <div class="well dropdownNav">
+            <div class="row">
+                <div class="col-sm-1">
+                    <button class="btn btn-success" id="searchButton">Search</button>
+                </div>
+                <div class="col-sm-2">
+                    <select class ="selectpicker" id="crimeSelector" data-style="btn-success">
+                      <option value="Burglary" >Burglary</option>
+                      <option value= "Robbery">Robbery</option>
+                      <option value ="Grand Larceny">Grand Larceny</option>
+                    </select>
+                </div>
+                <!--<div class="dropdown col-sm-3">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Offense Type <span class="caret"></span> </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" id="offenseType1">Burglary</a></li>
+                    <li><a href="#" id="offenseType2">Robbery</a></li>
+                    <li><a href="#" id="offenseType3">Grand Larceny</a></li>
+                </ul>
+            </div>-->
+            </div>
+        </div>
     </div>
     <div id="googleMap"></div>
 
@@ -40,6 +73,11 @@
     <!--bootstrap-->
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <!--bootstrap-select is a plugin to style the select element-->
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
+
 </body>
 
 </html>
