@@ -1,5 +1,5 @@
 //maybe have an array of markers to show location of 911 incidents
-//initialize google map.
+//initialize google map. TODO: Add info to each marker. 
 function initialize(jsonParsed) {
 
     var mapCanvas = document.getElementById('googleMap');
@@ -34,12 +34,12 @@ function initialize(jsonParsed) {
 
 
 //AJAX request to
-function startRequest() {
+function startRequest(url) {
     var httpRequest;
     //Added multiple queries--- TODO: Make navigation bar for user to input these queries to make easy to read.
-    var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense=ROBBERY&borough=BROOKLYN';
+    //var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense=ROBBERY&borough=BROOKLYN';
     var testData;
-
+    console.log(url);
     httpRequest = new XMLHttpRequest();
 
     if (!httpRequest) {
@@ -72,18 +72,21 @@ function parsingJSONRequest(text) {
     return JSONobject;
 }
 
+//function that edits the URL parameters and returns edited url.
+function editUrlQuery(offenseType){
+  var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense='+offenseType+'&borough=BROOKLYN';
+  return url;
+}
 
+//Gets the value in the crimeSelector select element in html which contains all the offense types.
+function offenseType(){
+  var offenseType = document.getElementById('crimeSelector').value;
+  return offenseType.toUpperCase()
+}
+
+//event laaunched when search button is pressed. offenseType function returns the type of the offense which is then passed into
+//editUrlQuery which then inserts the offenseType into the url and returns the url. startRequest makes an ajax call to the url.
 document.getElementById("searchButton").addEventListener('click', function() {
-    //get the selected value in the select element and assign it to the query.
-    if(document.getElementById('crimeSelector').value == 'Burglary'){
-      alert("Burglary");
-    }
-    if(document.getElementById('crimeSelector').value == 'Robbery'){
-      alert("Robbery");
-    }
-    if(document.getElementById('crimeSelector').value == 'Grand Larceny'){
-      alert("Grand Larceny");
-    }
-    var jsontext = startRequest();
+    var jsontext = startRequest(editUrlQuery(offenseType()));
     initialize(jsontext);
 }, false);
