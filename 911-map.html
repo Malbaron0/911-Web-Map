@@ -15,7 +15,7 @@
     <!--bootstrap-->
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="911-map.css">
     <style>
         html,
         body {
@@ -26,11 +26,6 @@
 
         #googleMap {
             height: 100%;
-        }
-
-        .dropdownNav {
-            position: relative;
-            ;
         }
     </style>
 
@@ -45,13 +40,23 @@
                 <div class="col-sm-1">
                     <button class="btn btn-success" id="searchButton">Search</button>
                 </div>
-                <div class="col-sm-3">
-                    <select class ="selectpicker" id="crimeSelector" data-style="btn-success">
-                      <option value="Burglary" >Burglary</option>
-                      <option value= "Robbery">Robbery</option>
-                      <option value ="Grand Larceny">Grand Larceny</option>
+                <div class="col-sm-2">
+                    <select class ="form-control" id="offenseSelector" data-style="btn-success">
+                      <option value="BURGLARY" >Burglary</option>
+                      <option value= "ROBBERY">Robbery</option>
+                      <option value ="GRAND LARCENY">Grand Larceny</option>
                     </select>
                 </div>
+                <div class="col-sm-2">
+                  <select class= "form-control" id="yearSelector"></select>
+                </div>
+                <div class="col-sm-2">
+                  <select class="form-control" id="monthSelector"></select>
+                </div>
+                <div class="col-sm-2">
+                  <select class="form-control" id="boroughSelector"></select>
+                </div>
+
                 <!--<div class="dropdown col-sm-3">
                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Offense Type <span class="caret"></span> </button>
