@@ -1,5 +1,5 @@
 //maybe have an array of markers to show location of 911 incidents
-//initialize google map. TODO: Add info to each marker. 
+//initialize google map. TODO: Add info to each marker.
 function initialize(jsonParsed) {
 
     var mapCanvas = document.getElementById('googleMap');
@@ -73,20 +73,105 @@ function parsingJSONRequest(text) {
 }
 
 //function that edits the URL parameters and returns edited url.
-function editUrlQuery(offenseType){
-  var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense='+offenseType+'&borough=BROOKLYN';
+function editUrlQuery(){
+  console.log(this.offenseType+ " " + this.offenseYear + " " + this.offenseMonth +" "+ this.offenseBorough+" "+" From editUrlQuery");
+  var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year='+this.offenseYear+'&occurrence_month='+this.offenseMonth+'&offense='+this.offenseType+'&borough='+this.offenseBorough;
   return url;
 }
 
-//Gets the value in the crimeSelector select element in html which contains all the offense types.
-function offenseType(){
-  var offenseType = document.getElementById('crimeSelector').value;
-  return offenseType.toUpperCase()
+//Object with all they keys required to edit url. Any search option user chooses gets assigned to appropriate key;
+var offenseSearchDetail = {
+  offenseType: null,
+  offenseYear: null,
+  offenseMonth: null,
+  offenseBorough: null
 }
 
-//event laaunched when search button is pressed. offenseType function returns the type of the offense which is then passed into
-//editUrlQuery which then inserts the offenseType into the url and returns the url. startRequest makes an ajax call to the url.
+//Gets the value in the select elements in html which contains all the search categories.
+function assignSearchSelection(){
+   this.offenseType = document.getElementById('offenseSelector').value;
+   this.offenseYear = document.getElementById('yearSelector').value;
+   this.offenseMonth = document.getElementById('monthSelector').value;
+   this.offenseBorough = document.getElementById('boroughSelector').value;
+}
+
+//event laaunched when search button is pressed. assignSearchSelection function assigns values to the keys in offenseSearchDetail object, which is then passed into
+//editUrlQuery which then inserts the value into the url and returns the url. startRequest makes an ajax call to the url.
 document.getElementById("searchButton").addEventListener('click', function() {
-    var jsontext = startRequest(editUrlQuery(offenseType()));
+    assignSearchSelection.call(offenseSearchDetail);
+    var jsontext = startRequest(editUrlQuery.call(offenseSearchDetail));
     initialize(jsontext);
 }, false);
+
+//Create option values for the Select element. Option values contain years from 2000 - 2015
+function fillYearSelectElement(){
+  var yearSelection = document.getElementById("yearSelector");
+  var yearArray = [];
+  var total = 2000;
+  var selectOptions;
+  for (var i = 0; i<=15; i++){
+      yearArray[i] = total;
+      total++;
+  }
+
+  //creat one option with each loop, give it a value and text (what the use sees). Then append the option to the Select element
+  for (let i = 0; i <= yearArray.length-1; i++){
+      selectOptions = document.createElement("option");
+      selectOptions.value = yearArray[i];
+      selectOptions.text = yearArray[i];
+      yearSelection.appendChild(selectOptions);
+  }
+
+}
+
+//Create option values for the Select element. Option values contain the months in the year
+function fillMonthSelectElement(){
+  var monthSelection = document.getElementById("monthSelector");
+  var monthArray = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October","November", "December"];
+
+  //creat one option with each loop, give it a value and text (what the use sees). Then append the option to the Select element
+  for (let i = 0; i <= monthArray.length-1; i++){
+      selectOptions = document.createElement("option");
+      selectOptions.value = monthArray[i].substring(0, 3);
+      selectOptions.text = monthArray[i];
+      monthSelector.appendChild(selectOptions);
+  }
+
+}
+
+//Create option values for the Select element. Option values contain the borough of new york
+function fillBoroughSelectElement(){
+  var boroughSelection = document.getElementById("boroughSelector");
+  var boroughArray = ["Brooklyn", "Queens", "Bronx", "Manhattan", "Staten Island"];
+
+  //creat one option with each loop, give it a value and text (what the use sees). Then append the option to the Select element
+  for (let i = 0; i <= boroughArray.length-1; i++){
+      selectOptions = document.createElement("option");
+      selectOptions.value = boroughArray[i].toUpperCase();
+      selectOptions.text = boroughArray[i];
+      boroughSelection.appendChild(selectOptions);
+  }
+}
+
+//Create option values for the Select element. Option values contain offense types
+function fillOffenseTypeSelectElement(){
+  var offenseSelection = document.getElementById("offenseSelector");
+  var offenseArray = ["Burglary", "Felony Assault", "Grand Larceny", "Grand Larceny of Motor Vehicle", "Murder & Non-negl. Manslaughte", "Rape", "Robbery"];
+
+  //creat one option with each loop, give it a value and text (what the use sees). Then append the option to the Select element
+  for (let i = 0; i <= offenseArray.length-1; i++){
+      selectOptions = document.createElement("option");
+      selectOptions.value = offenseArray[i].toUpperCase();
+      selectOptions.text = offenseArray[i];
+      offenseSelection.appendChild(selectOptions);
+  }
+}
+
+
+
+window.onload = function(){
+    fillYearSelectElement();
+    fillMonthSelectElement();
+    fillBoroughSelectElement();
+    fillOffenseTypeSelectElement();
+}
