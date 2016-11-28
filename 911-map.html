@@ -15,45 +15,20 @@
     <!--bootstrap-->
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="911-map.css">
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        #googleMap {
-            height: 100%;
-        }
-    </style>
+    <link rel="stylesheet" style="text/css" href="911-map.css">
 
 </head>
 
 <body>
-    <h1>NY 911 Map</h1>
+    <div id="mySidenav" class="navbar">
+        <ul class="list-inline">
+            <li><select class="selectpicker"  data-style="btn-primary" id="offenseSelector"></select></li>
+            <li><select class="selectpicker"  data-style="btn-primary" id="monthSelector"></select> </li>
+            <li><select class="selectpicker"  data-style="btn-primary" id="boroughSelector"></select></li>
+            <li><button class="btn btn-success" id="searchButton">Search</button></li>
+        </ul>
 
-    <div class="container">
-        <div class="well dropdownNav">
-            <div class="row">
-                <div class="col-sm-1">
-                    <button class="btn btn-success" id="searchButton">Search</button>
-                </div>
-                <div class="col-sm-2">
-                    <select class ="form-control" id="offenseSelector"></select>
-                </div>
-                <div class="col-sm-2">
-                  <select class= "form-control" id="yearSelector"></select>
-                </div>
-                <div class="col-sm-2">
-                  <select class="form-control" id="monthSelector"></select>
-                </div>
-                <div class="col-sm-2">
-                  <select class="form-control" id="boroughSelector"></select>
-                </div>
-
-                <!--<div class="dropdown col-sm-3">
+            <!--<div class="dropdown col-sm-3">
                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Offense Type <span class="caret"></span> </button>
                 <ul class="dropdown-menu">
@@ -62,8 +37,7 @@
                     <li><a href="#" id="offenseType3">Grand Larceny</a></li>
                 </ul>
             </div>-->
-            </div>
-        </div>
+
     </div>
     <div id="googleMap"></div>
 
@@ -79,6 +53,7 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/js/bootstrap-select.min.js"></script>
     <script src="Libraries/moment.js"></script>
+
 
 </body>
 
