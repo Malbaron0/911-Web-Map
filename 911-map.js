@@ -7,24 +7,24 @@ function initialize(jsonParsed) {
     var myCenter;
 
     //Depending on what use chooses as a borough, the map will focus on that location when user searches.
-    switch(offenseSearchDetail.offenseBorough){
-      case "BROOKLYN":
-      myCenter = new google.maps.LatLng(40.650002,-73.949997);
-      break;
-      case "QUEENS":
-      myCenter = new google.maps.LatLng(40.742054,-73.769417);
-      break;
-      case "BRONX":
-      myCenter = new google.maps.LatLng(40.837048,-73.865433);
-      break;
-      case "STATEN ISLAND":
-      myCenter = new google.maps.LatLng(40.579021,-74.151535);
-      break;
-      case "MANHATTAN":
-      myCenter = new google.maps.LatLng(40.758896,-73.985130);
-      break;
-      default:
-      myCenter = new google.maps.LatLng(40.650002,-73.949997);
+    switch (offenseSearchDetail.offenseBorough) {
+        case "BROOKLYN":
+            myCenter = new google.maps.LatLng(40.650002, -73.949997);
+            break;
+        case "QUEENS":
+            myCenter = new google.maps.LatLng(40.742054, -73.769417);
+            break;
+        case "BRONX":
+            myCenter = new google.maps.LatLng(40.837048, -73.865433);
+            break;
+        case "STATEN ISLAND":
+            myCenter = new google.maps.LatLng(40.579021, -74.151535);
+            break;
+        case "MANHATTAN":
+            myCenter = new google.maps.LatLng(40.758896, -73.985130);
+            break;
+        default:
+            myCenter = new google.maps.LatLng(40.650002, -73.949997);
     }
 
 
@@ -40,26 +40,33 @@ function initialize(jsonParsed) {
 
 
     //function adds an event listener to each marker. when clicked an infowindow is shown with some information about that specific marker.
-    function markTheMap(nycOpenDataObject){
-      var latLng = new google.maps.LatLng(nycOpenDataObject.location_1.coordinates[1], nycOpenDataObject.location_1.coordinates[0]);
+    function markTheMap(nycOpenDataObject) {
 
-      var marker = new google.maps.Marker({
-          position: latLng,
-          map: map
-      });
+        var parsedDateMonth = moment(nycOpenDataObject.rpt_dt).format("MMMM"); //get the month of the current object.
 
-        google.maps.event.addListener(marker, 'click', function(){
-          infowindow.close(); // Close previously opened infowindow
-          infowindow.setContent(googleMapInfoWindow.call(nycOpenDataObject));
+        //Mark the object on the map if it has the same offense month as what the user chose.
+        if (parsedDateMonth == offenseSearchDetail.offenseMonth) {
+            var latLng = new google.maps.LatLng(nycOpenDataObject.latitude, nycOpenDataObject.longitude);
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: map
+            });
+
+            google.maps.event.addListener(marker, 'click', function() {
+                infowindow.close(); // Close previously opened infowindow
+                infowindow.setContent(googleMapInfoWindow.call(nycOpenDataObject));
                 infowindow.maxWidth = 50;
                 infowindow.open(map, marker);
-        });
-
+            });
+        }
+        else {
+            return;
+        }
     }
 
     //go through each value in the json and mark it on the map and give appropriate infowindow.
-    for (var value in nycOpenData){
-      markTheMap(nycOpenData[value]);
+    for (var value in nycOpenData) {
+        markTheMap(nycOpenData[value]);
     }
 
 
@@ -95,23 +102,23 @@ function initialize(jsonParsed) {
     //infowindow.open(map, marker);
 }
 
-
 //HTML for the info window when clicked on the marker.
-function googleMapInfoWindow(info){
-  var parsedDate = moment(this.occurrence_date).format("MMMM Do YYYY, h:mm: a");
+function googleMapInfoWindow(){
+  var parsedDate = moment(this.rpt_dt).format("MMMM Do YYYY");  //use this to get the yaer and let user search by year.
 
   var contentString = '<div class="info-window">' +
-        '<h3>'+this.borough+'</h3>' +
+        '<h3>'+this.boro_nm+'</h3>' +
         '<div class="info-content">' +
-        '<p><b>Offense:\t</b>'+this.offense+'</p>' +
-        '<p><b>Occurence Date:\t</b>'+parsedDate+'</p>' +
-        '<p><b>Day:\t</b>'+this.day_of_week+'</p>' +
-        '<p><b>Precinct:\t</b>'+this.precinct+'</p>' +
-        '<p><b>Jurisdiction:\t</b>'+this.jurisdiction+'</p>'+
+        '<p><b>Offense:\t</b>'+this.ofns_desc+'</p>' +
+        '<p><b>Offense Description:\t</b>'+this.pd_desc+'</p>' +
+        '<p><b>Location Type:\t</b>'+this.prem_typ_desc+'</p>' +
+        '<p><b>Occurence Date:\t</b>'+parsedDate+'</p>'+
+        '<p><b>Complaint Number:\t</b>'+this.cmplnt_num+'</p>' +
         '</div>' +
         '</div>';
   return contentString;
 }
+
 
 //AJAX request to cityofnewyork API. return the response parsed as JSON
 function startRequest(url) {
@@ -159,15 +166,14 @@ function parsingToJSON(text) {
 
 //function that edits the URL parameters and returns edited url.
 function editUrlQuery(){
-  console.log(this.offenseType+ " " + this.offenseYear + " " + this.offenseMonth +" "+ this.offenseBorough+" "+" From editUrlQuery");
-  var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year='+this.offenseYear+'&occurrence_month='+this.offenseMonth+'&offense='+this.offenseType+'&borough='+this.offenseBorough;
+  console.log(this.offenseType + " " + this.offenseYear + " " + this.offenseMonth + " " + this.offenseBorough + " " + " From editUrlQuery");
+      var url = 'https://data.cityofnewyork.us/resource/7x9x-zpz6.json?&ofns_desc=' + this.offenseType + '&boro_nm=' + this.offenseBorough;
   return url;
 }
 
 //Object with all they keys required to edit url. Any search option user chooses gets assigned to appropriate key;
 var offenseSearchDetail = {
   offenseType: null,
-  offenseYear: null,
   offenseMonth: null,
   offenseBorough: null
 }
@@ -175,21 +181,38 @@ var offenseSearchDetail = {
 //Gets the value in the select elements in html which contains all the search categories.
 function assignSearchSelection(){
    this.offenseType = document.getElementById('offenseSelector').value;
-   this.offenseYear = document.getElementById('yearSelector').value;
    this.offenseMonth = document.getElementById('monthSelector').value;
    this.offenseBorough = document.getElementById('boroughSelector').value;
+
+
 }
 
 //event laaunched when search button is pressed. assignSearchSelection function assigns values to the keys in offenseSearchDetail object, which is then passed into
 //editUrlQuery which then inserts the value into the url and returns the url. startRequest makes an ajax call to the url.
 document.getElementById("searchButton").addEventListener('click', function() {
+
     assignSearchSelection.call(offenseSearchDetail);
     var jsontext = startRequest(editUrlQuery.call(offenseSearchDetail));
     initialize(jsontext);
+
+
+//MULTIPLE CHOICES!!!! WORK ON THIS!!!!!!!!!!!!!!!!!!
+    /*var choices = document.getElementById('offenseSelector');
+    var options = [];
+
+    for (let i = 0; i < choices.options.length; i++){
+      if(choices.options[i].selected){
+       options.push(choices.options[i].value);
+     }
+    }
+
+    console.log(options);*/
+
 }, false);
 
+//At them moment only using api that contains crimes for 2016
 //Create option values for the Select element. Option values contain years from 2000 - 2015
-function fillYearSelectElement(){
+/*function fillYearSelectElement(){
   var yearSelection = document.getElementById("yearSelector");
   var yearArray = [];
   var total = 2000;
@@ -207,7 +230,7 @@ function fillYearSelectElement(){
       yearSelection.appendChild(selectOptions);
   }
 
-}
+}*/
 
 //Create option values for the Select element. Option values contain the months in the year
 function fillMonthSelectElement(){
@@ -217,7 +240,7 @@ function fillMonthSelectElement(){
   //creat one option with each loop, give it a value and text (what the use sees). Then append the option to the Select element
   for (let i = 0; i <= monthArray.length-1; i++){
       selectOptions = document.createElement("option");
-      selectOptions.value = monthArray[i].substring(0, 3);
+      selectOptions.value = monthArray[i];
       selectOptions.text = monthArray[i];
       monthSelector.appendChild(selectOptions);
   }
@@ -255,7 +278,7 @@ function fillOffenseTypeSelectElement(){
 
 
 window.onload = function(){
-    fillYearSelectElement();
+    //fillYearSelectElement();
     fillMonthSelectElement();
     fillBoroughSelectElement();
     fillOffenseTypeSelectElement();
