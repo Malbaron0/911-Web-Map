@@ -27,16 +27,31 @@ function initialize(jsonParsed) {
             myCenter = new google.maps.LatLng(40.650002, -73.949997);
     }
 
-
     var mapProp = {
         center: myCenter,
-        zoom: 12,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        zoom: 12
     };
+
+    //black and white style for google maps https://snazzymaps.com/style/8097/wy
+    var styledMapType = new google.maps.StyledMapType(
+      [
+        {"featureType":"all","elementType":"geometry.fill","stylers":[{"weight":"2.00"}]},
+        {"featureType":"all","elementType":"geometry.stroke","stylers":[{"color":"#9c9c9c"}]},{"featureType":"all","elementType":"labels.text","stylers":[{"visibility":"on"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},
+        {"featureType":"landscape","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},
+        {"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road","elementType":"geometry.fill","stylers":[{"color":"#eeeeee"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":
+        [{"color":"#7b7b7b"}]},{"featureType":"road","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon",
+        "stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},
+        {"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#c8d7d4"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#070707"}]},
+        {"featureType":"water","elementType":"labels.text.stroke","stylers":[{"color":"#ffffff"}]}] , {name: 'Styled Map'});
 
 
     var infowindow = new google.maps.InfoWindow(); //only need to make infowindow object once, and use in loop
     var map = new google.maps.Map(mapCanvas, mapProp); // map object
+
+    //set the style type
+    map.mapTypes.set('styled_map', styledMapType);
+    map.setMapTypeId('styled_map');
+
 
 
     //function adds an event listener to each marker. when clicked an infowindow is shown with some information about that specific marker.
@@ -46,6 +61,8 @@ function initialize(jsonParsed) {
 
         //Mark the object on the map if it has the same offense month as what the user chose.
         if (parsedDateMonth == offenseSearchDetail.offenseMonth) {
+          console.log(parsedDateMonth);
+
             var latLng = new google.maps.LatLng(nycOpenDataObject.latitude, nycOpenDataObject.longitude);
             var marker = new google.maps.Marker({
                 position: latLng,
@@ -60,6 +77,7 @@ function initialize(jsonParsed) {
             });
         }
         else {
+            console.log('Month not avaliable');
             return;
         }
     }
@@ -68,11 +86,6 @@ function initialize(jsonParsed) {
     for (var value in nycOpenData) {
         markTheMap(nycOpenData[value]);
     }
-
-
-
-
-
 
     // closure problem with this method. refer to http://stackoverflow.com/a/30479554
     /*for (var value in nycOpenData) {
@@ -118,7 +131,6 @@ function googleMapInfoWindow(){
         '</div>';
   return contentString;
 }
-
 
 //AJAX request to cityofnewyork API. return the response parsed as JSON
 function startRequest(url) {
@@ -191,22 +203,10 @@ function assignSearchSelection(){
 //editUrlQuery which then inserts the value into the url and returns the url. startRequest makes an ajax call to the url.
 document.getElementById("searchButton").addEventListener('click', function() {
 
+    $(".navbar").addClass("slideUp"); //jquery add class that translates nav bar to top of page
     assignSearchSelection.call(offenseSearchDetail);
     var jsontext = startRequest(editUrlQuery.call(offenseSearchDetail));
     initialize(jsontext);
-
-
-//MULTIPLE CHOICES!!!! WORK ON THIS!!!!!!!!!!!!!!!!!!
-    /*var choices = document.getElementById('offenseSelector');
-    var options = [];
-
-    for (let i = 0; i < choices.options.length; i++){
-      if(choices.options[i].selected){
-       options.push(choices.options[i].value);
-     }
-    }
-
-    console.log(options);*/
 
 }, false);
 
@@ -274,7 +274,6 @@ function fillOffenseTypeSelectElement(){
       offenseSelection.appendChild(selectOptions);
   }
 }
-
 
 
 window.onload = function(){

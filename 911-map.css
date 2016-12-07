@@ -1,16 +1,23 @@
-.dropdownNav {
-    position: relative;
-}
-
 .navbar{
-  margin-top: 20px;
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 2s;
 }
 html,body {
     height: 100%;
     margin: 0;
     padding: 0;
+    position: relative;
 }
 
 #googleMap {
     height: 100%;
+}
+
+.slideUp{
+  position: absolute;
+  top: 8%;
 }
