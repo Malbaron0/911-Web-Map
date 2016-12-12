@@ -2,12 +2,13 @@
   position: absolute;
   z-index: 10;
   top: 50%;
-  left: 50%;
+  left: 45%;
   transform: translate(-50%, -50%);
   transition: all 2s;
 }
 html,body {
     height: 100%;
+    width: 100%
     margin: 0;
     padding: 0;
     position: relative;
@@ -20,4 +21,13 @@ html,body {
 .slideUp{
   position: absolute;
   top: 8%;
+}
+li {
+    display: inline;
+}
+
+.iw-content{
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+
 }
