@@ -34,11 +34,11 @@ function initialize(jsonParsed) {
 
     var styledMapType = mapStyle();
     //var infowindow = new google.maps.InfoWindow(); //only need to make infowindow object once, and use in loop
-    infoBubble = new InfoBubble({
+    var infoBubble = new InfoBubble({
           maxWidth: 300,
-          backgroundColor: '#428BCA'
+          backgroundColor: '#428BCA',
         });
-    infoBubble.tabsContainer_.style['display'] = 'none'; //remove the tab feature of infobubble.
+    //infoBubble.tabsContainer_.style['display'] = 'none'; //remove the tab feature of infobubble.
 
     var map = new google.maps.Map(mapCanvas, mapProp); // map object
 
@@ -66,8 +66,9 @@ function initialize(jsonParsed) {
             google.maps.event.addListener(marker, 'click', function() {
 
                 infoBubble.close(); // Close previously opened infowindow
+                infoBubble.removeTab(0);
 
-                infoBubble.addTab(nycOpenDataObject.boro_nm, googleMapInfoWindow.call(nycOpenDataObject));
+                infoBubble.addTab(nycOpenDataObject.boro_nm.fontcolor("white"), googleMapInfoWindow.call(nycOpenDataObject));
                 infoBubble.open(map, marker);
                 //infowindow.setContent(googleMapInfoWindow.call(nycOpenDataObject));
                 //infowindow.maxWidth = 250;
@@ -117,9 +118,8 @@ function googleMapInfoWindow() {
     var parsedDate = moment(this.rpt_dt).format("MMMM Do YYYY"); //use this to get the yaer and let user search by year.
 
     var contentString = '<div class="iw-content">' +
-        '<h3>' + this.boro_nm + '</h3>' +
+        '<h3>' + this.ofns_desc + '</h3>' +
         '<div class="info-content">' +
-        '<p><b>Offense:\t</b>' + this.ofns_desc + '</p>' +
         '<p><b>Offense Description:\t</b>' + this.pd_desc + '</p>' +
         '<p><b>Location Type:\t</b>' + this.prem_typ_desc + '</p>' +
         '<p><b>Occurence Date:\t</b>' + parsedDate + '</p>' +
@@ -142,7 +142,7 @@ function startRequest(url) {
         return false;
     }
     httpRequest.onreadystatechange = NYCOpenDataResponse;
-    httpRequest.open('GET', url, false);
+    httpRequest.open('GET', url, true);
     httpRequest.setRequestHeader('X-App-Token', 'VxVfB1l051bDWPhFmrm2QeX9a');
     httpRequest.send(null);
 

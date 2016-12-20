@@ -1759,7 +1759,7 @@ InfoBubble.prototype.positionCloseButton_ = function() {
   var br = this.getBorderRadius_();
   var bw = this.getBorderWidth_();
 
-  var right = 2;
+  var right = 20;
   var top = 2;
 
   if (this.tabs_.length && this.tabHeight_) {
