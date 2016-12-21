@@ -130,19 +130,19 @@ function googleMapInfoWindow() {
 }
 
 //AJAX request to cityofnewyork API. return the response parsed as JSON
-function startRequest(url) {
-    var httpRequest;
+function startRequest(myUrl) {
     //var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense=ROBBERY&borough=BROOKLYN';
     var dataSet;
-    console.log(url);
-    httpRequest = new XMLHttpRequest();
+    console.log(myUrl);
 
+    /*
+    var httpRequest = new XMLHttpRequest();
     if (!httpRequest) {
         alert('Giving up :( Cannot create an XMLHTTP instance');
         return false;
     }
     httpRequest.onreadystatechange = NYCOpenDataResponse;
-    httpRequest.open('GET', url, true);
+    httpRequest.open('GET', myUrl, true);
     httpRequest.setRequestHeader('X-App-Token', 'VxVfB1l051bDWPhFmrm2QeX9a');
     httpRequest.send(null);
 
@@ -162,8 +162,25 @@ function startRequest(url) {
             console.log(e.description);
         }
     }
+    */
 
-    return parsingToJSON(dataSet);
+    //return parsingToJSON(dataSet);
+
+    $.ajax({
+      url: myUrl,
+      headers : {
+          'X-App-Token' : 'VxVfB1l051bDWPhFmrm2QeX9a'
+      },
+
+      success: function (data){
+        console.log(data);
+        //put all logic here when  search button is clicked. 
+      }
+
+
+    });
+
+
 }
 
 function parsingToJSON(text) {
@@ -211,6 +228,7 @@ $(document).ready(function() {
         $(".navbar").addClass("slideUp"); //jquery add class that translates nav bar to top of page
         assignSearchSelection.call(offenseSearchDetail);
         var jsontext = startRequest(editUrlQuery.call(offenseSearchDetail));
+        console.log(jsontext + "calling!!!!!!!!!!!!!!!!!");
         initialize(jsontext);
 
     }, false);
