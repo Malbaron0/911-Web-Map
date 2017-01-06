@@ -1,52 +1,19 @@
-//maybe have an array of markers to show location of 911 incidents
-//initialize google map. TODO: Add info to each marker.
+//GLOBALS VARIABLES
+var map;
+var parsedNYCData;
+var markersArray = [];
+
+//Mark the google map with appropriate data.
 function initialize(jsonParsed) {
 
-    var mapCanvas = document.getElementById('googleMap');
+    //var mapCanvas = document.getElementById('googleMap');
     var nycOpenData = jsonParsed;
-    var myCenter;
 
-    //Depending on what use chooses as a borough, the map will focus on that location when user searches.
-    switch (offenseSearchDetail.offenseBorough) {
-        case "BROOKLYN":
-            myCenter = new google.maps.LatLng(40.650002, -73.949997);
-            break;
-        case "QUEENS":
-            myCenter = new google.maps.LatLng(40.742054, -73.769417);
-            break;
-        case "BRONX":
-            myCenter = new google.maps.LatLng(40.837048, -73.865433);
-            break;
-        case "STATEN ISLAND":
-            myCenter = new google.maps.LatLng(40.579021, -74.151535);
-            break;
-        case "MANHATTAN":
-            myCenter = new google.maps.LatLng(40.758896, -73.985130);
-            break;
-        default:
-            myCenter = new google.maps.LatLng(40.650002, -73.949997);
-    }
-
-    var mapProp = {
-        center: myCenter,
-        zoom: 12
-    };
-
-    var styledMapType = mapStyle();
     //var infowindow = new google.maps.InfoWindow(); //only need to make infowindow object once, and use in loop
     var infoBubble = new InfoBubble({
           maxWidth: 300,
           backgroundColor: '#428BCA',
         });
-    //infoBubble.tabsContainer_.style['display'] = 'none'; //remove the tab feature of infobubble.
-
-    var map = new google.maps.Map(mapCanvas, mapProp); // map object
-
-    //set the style type
-    map.mapTypes.set('styled_map', styledMapType);
-    map.setMapTypeId('styled_map');
-
-
 
     //function adds an event listener to each marker. when clicked an infowindow is shown with some information about that specific marker.
     function markTheMap(nycOpenDataObject) {
@@ -63,6 +30,7 @@ function initialize(jsonParsed) {
                 map: map
             });
 
+            markersArray.push(marker);//Adding markers to array, so later they can be removed.
             google.maps.event.addListener(marker, 'click', function() {
 
                 infoBubble.close(); // Close previously opened infowindow
@@ -84,33 +52,60 @@ function initialize(jsonParsed) {
     for (var value in nycOpenData) {
         markTheMap(nycOpenData[value]);
     }
+}
 
-    // closure problem with this method. refer to http://stackoverflow.com/a/30479554
-    /*for (var value in nycOpenData) {
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(nycOpenData[value].location_1.coordinates[1], nycOpenData[value].location_1.coordinates[0]),
-            title: 'map911'
-            map: map
-        });
+//All markers when are cleared off the map, by going through each marker and setting it to null on the map.
+function clearOverlays (){
+  for (let i = 0; i < markersArray.length; i++ ) {
+    markersArray[i].setMap(null);
+  }
+  markersArray = [];
+}
 
-          google.maps.event.addListener(marker, 'click', function(){
-            infowindow.close(); // Close previously opened infowindow
-            infowindow.setContent( "<div id='infowindow'>"+ nycOpenDataObject.precinct +"</div>");
-            infowindow.open(map, marker);
-          });
+//Returns a promise. Loads the initial empty map
+let loadMap = function(){
+  var mapCanvas = document.getElementById('googleMap');
+  var styledMapType = mapStyle();
 
-        //console.log(nycOpenData[value].location_1.coordinates[1]+'  ' +nycOpenData[value].location_1.coordinates[0])
-        //marker.setMap(map);
+  return new Promise(function(resolve, reject){
+    var mapProp = {
+        center: centerLocation(),
+        zoom: 12
+    };
+    map = new google.maps.Map(mapCanvas, mapProp);
+    //set the style type
+    map.mapTypes.set('styled_map', styledMapType);
+    map.setMapTypeId('styled_map');
 
-    }*/
-
-    // tool tip on top of the marker
-    /*
-    var infowindow = new google.maps.InfoWindow({
-        content: 'Show name or title of 911 call'
+    google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+        resolve("Map Loaded")
     });
-    */
-    //infowindow.open(map, marker);
+
+  });
+};
+
+function centerLocation(){
+
+      //Depending on what user chooses as a borough, the map will focus on that location when user searches.
+      switch (offenseSearchDetail.offenseBorough) {
+          case "BROOKLYN":
+              return new google.maps.LatLng(40.650002, -73.949997);
+              break;
+          case "QUEENS":
+              return new google.maps.LatLng(40.742054, -73.769417);
+              break;
+          case "BRONX":
+               return new google.maps.LatLng(40.837048, -73.865433);
+              break;
+          case "STATEN ISLAND":
+              return new google.maps.LatLng(40.579021, -74.151535);
+              break;
+          case "MANHATTAN":
+              return new google.maps.LatLng(40.758896, -73.985130);
+              break;
+          default:
+              return new google.maps.LatLng(40.650002, -73.949997); //Brooklyn
+      }
 }
 
 //HTML for the info window when clicked on the marker.
@@ -129,64 +124,20 @@ function googleMapInfoWindow() {
     return contentString;
 }
 
-//AJAX request to cityofnewyork API. return the response parsed as JSON
+//AJAX request to cityofnewyork API.
 function startRequest(myUrl) {
     //var url = 'https://data.cityofnewyork.us/resource/e4qk-cpnv.json?occurrence_year=2006&occurrence_month=Sep&offense=ROBBERY&borough=BROOKLYN';
     var dataSet;
     console.log(myUrl);
+    var promise = $.ajax({
+        url: myUrl,
+        headers : {
+            'X-App-Token' : 'VxVfB1l051bDWPhFmrm2QeX9a'
+        },
+      });
 
-    /*
-    var httpRequest = new XMLHttpRequest();
-    if (!httpRequest) {
-        alert('Giving up :( Cannot create an XMLHTTP instance');
-        return false;
-    }
-    httpRequest.onreadystatechange = NYCOpenDataResponse;
-    httpRequest.open('GET', myUrl, true);
-    httpRequest.setRequestHeader('X-App-Token', 'VxVfB1l051bDWPhFmrm2QeX9a');
-    httpRequest.send(null);
-
-
-    function NYCOpenDataResponse() {
-        try {
-            if (httpRequest.readyState === XMLHttpRequest.DONE) {
-                if (httpRequest.status === 200) {
-                    dataSet = httpRequest.responseText;
-                    //return testData;
-                } else {
-                    alert('There was a problem with the request.');
-                }
-            }
-        } catch (e) {
-            alert('Problem with server');
-            console.log(e.description);
-        }
-    }
-    */
-
-    //return parsingToJSON(dataSet);
-
-    $.ajax({
-      url: myUrl,
-      headers : {
-          'X-App-Token' : 'VxVfB1l051bDWPhFmrm2QeX9a'
-      },
-
-      success: function (data){
-        console.log(data);
-        //put all logic here when  search button is clicked. 
-      }
-
-
-    });
-
-
-}
-
-function parsingToJSON(text) {
-    var JSONobject = JSON.parse(text);
-    return JSONobject;
-}
+    return promise;
+};
 
 //function that edits the URL parameters and returns edited url.
 function editUrlQuery() {
@@ -227,12 +178,23 @@ $(document).ready(function() {
 
         $(".navbar").addClass("slideUp"); //jquery add class that translates nav bar to top of page
         assignSearchSelection.call(offenseSearchDetail);
-        var jsontext = startRequest(editUrlQuery.call(offenseSearchDetail));
-        console.log(jsontext + "calling!!!!!!!!!!!!!!!!!");
-        initialize(jsontext);
+
+        //startRequestFunc returns $.ajax object which is a promise, and using the .done function once the $.ajax receives the result
+        startRequest(editUrlQuery.call(offenseSearchDetail)).done(function(result){
+          console.log("Succes with the AJAX call")
+          clearOverlays(); //Clear any previous Markers on map
+          map.setCenter(centerLocation()); //center to the new location
+          initialize(result) //load the data on to the map
+
+        }).fail(function(jqXHR, textStatus, errorThrown){
+          console.log("Error with the AJAX request: " + jqXHR.status + "  " + textStatus + "  " + errorThrown);
+        })
+        //initialize(jsontext);
 
     }, false);
 });
+
+
 //At them moment only using api that contains crimes for 2016
 //Create option values for the Select element. Option values contain years from 2000 - 2015
 function fillYearSelectElement() {
@@ -423,4 +385,9 @@ window.onload = function() {
     fillMonthSelectElement();
     fillBoroughSelectElement();
     fillOffenseTypeSelectElement();
+
+    //Load google map on window load. Map is loaded once and not over and over again when search button is clicked.
+    loadMap().then(function(){
+      console.log("Map Loaded");
+    })
 }
