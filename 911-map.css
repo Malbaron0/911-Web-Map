@@ -3,9 +3,16 @@
   z-index: 10;
   top: 50%;
   left: 45%;
+  text-align: center;
   transform: translate(-50%, -50%);
   transition: all 2s;
 }
+
+.navbarContent{
+  display: inline-block;
+
+}
+
 html,body {
     height: 100%;
     width: 100%
@@ -29,4 +36,5 @@ li {
 .iw-content{
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+
 }
