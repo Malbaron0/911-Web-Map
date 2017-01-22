@@ -42,27 +42,29 @@ html, body {
 select {
   width: 195px;
   border: 0;
-  font: 14px Cursive;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
   background-color: #323232;
   color: white;
   cursor: pointer; }
-  /* line 41, 911-web-map.sass */
+  /* line 42, 911-web-map.sass */
   select:hover {
     color: #fff;
     background-color: #323232;
     border-color: #01549b; }
 
-/* line 46, 911-web-map.sass */
+/* line 47, 911-web-map.sass */
 .searchButton {
   width: inherit; }
-  /* line 48, 911-web-map.sass */
+  /* line 49, 911-web-map.sass */
   .searchButton button {
     display: block;
     margin: 0 auto;
-    font: 14px Cursive;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
     border-radius: 0; }
 
-/* line 55, 911-web-map.sass */
+/* line 57, 911-web-map.sass */
 .toggle {
   text-decoration: none;
   font-size: 35px;
@@ -79,7 +81,7 @@ select {
   transition: all 0.15s ease-out 0s;
   z-index: 1;
   cursor: pointer; }
-  /* line 66, 911-web-map.sass */
+  /* line 68, 911-web-map.sass */
   .toggle:hover {
     color: #0275d8;
     -webkit-transform: scale(1.2);
@@ -88,13 +90,13 @@ select {
     -o-transform: scale(1.2);
     transform: scale(1.2); }
 
-/* line 71, 911-web-map.sass */
+/* line 73, 911-web-map.sass */
 #navbarToggle {
   display: none; }
-  /* line 75, 911-web-map.sass */
+  /* line 77, 911-web-map.sass */
   #navbarToggle:checked + .content-wrap .navbar {
     left: 0px; }
-  /* line 77, 911-web-map.sass */
+  /* line 79, 911-web-map.sass */
   #navbarToggle:checked + .content-wrap .toggle {
     left: 210px;
     top: 20px; }
