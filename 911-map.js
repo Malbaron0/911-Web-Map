@@ -174,9 +174,9 @@ function assignSearchSelection() {
 //event laaunched when search button is pressed. assignSearchSelection function assigns values to the keys in offenseSearchDetail object, which is then passed into
 //editUrlQuery which then inserts the value into the url and returns the url. startRequest makes an ajax call to the url.
 $(document).ready(function() {
-    document.getElementById("searchButton").addEventListener('click', function() {
+    document.getElementById("search_Button").addEventListener('click', function() {
 
-        $(".navbar").addClass("slideUp"); //jquery add class that translates nav bar to top of page
+        //$(".navbar").addClass("slideUp"); //jquery add class that translates nav bar to top of page
         assignSearchSelection.call(offenseSearchDetail);
 
         //startRequestFunc returns $.ajax object which is a promise, and using the .done function once the $.ajax receives the result
@@ -246,7 +246,7 @@ function fillBoroughSelectElement() {
 //Create option values for the Select element. Option values contain offense types
 function fillOffenseTypeSelectElement() {
     var offenseSelection = document.getElementById("offenseSelector");
-    var offenseArray = ["Arson", "Assault 3 & Related Offenses", "Burglary", "Child Abandonment/Non Support", "Felony Assault", "Grand Larceny", "Grand Larceny of Motor Vehicle", "Homicide-Negligent-Vehicle", "Kidnapping", "Rape", "Robbery", "Theft-Fraud"];
+    var offenseArray = ["Burglary", "Felony Assault", "Grand Larceny", "Grand Larceny of Motor Vehicle", "Kidnapping", "Rape", "Robbery"];
 
     //creat one option with each loop, give it a value and text (what the use sees). Then append the option to the Select element
     for (let i = 0; i <= offenseArray.length - 1; i++) {
