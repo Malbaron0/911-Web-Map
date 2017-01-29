@@ -5,6 +5,7 @@ A simple project using some JS (AJAX, Promoises) and css (SASS, Bourbon), which 
 Using NYC Open Data API (NYPD Complaint Data Current YTD and NYPD Complaint Data Historic)  
 NYPD 7 Major Felony Incidents API is closed off (was used previously)
 
+##
 
 **Libraries used in this project** 
 - [Font-awesome](http://fontawesome.io/)
