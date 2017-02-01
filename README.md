@@ -1,6 +1,6 @@
 # [911-Web-Map](http://malbaron0.github.io/911-Web-Map/)
 
-A simple project using some JS (AJAX, Promoises) and css (SASS, Bourbon), which basically marks the location of offenses chosen by offense type, offense date, and offense location by borough. 
+A simple project using some JS (AJAX, Promises) and css (SASS, Bourbon), which basically marks the location of offenses chosen by offense type, offense date, and offense location by borough. 
 
 Using NYC Open Data API (NYPD Complaint Data Current YTD and NYPD Complaint Data Historic)  
 NYPD 7 Major Felony Incidents API is closed off (was used previously)
