@@ -11,9 +11,9 @@ function initialize(jsonParsed) {
 
     //var infowindow = new google.maps.InfoWindow(); //only need to make infowindow object once, and use in loop
     var infoBubble = new InfoBubble({
-          maxWidth: 300,
-          backgroundColor: '#428BCA',
-        });
+        maxWidth: 300,
+        backgroundColor: '#428BCA',
+    });
 
     //function adds an event listener to each marker. when clicked an infowindow is shown with some information about that specific marker.
     function markTheMap(nycOpenDataObject) {
@@ -30,8 +30,8 @@ function initialize(jsonParsed) {
                 map: map
             });
 
-            markersArray.push(marker);//Adding markers to array, so later they can be removed.
-            google.maps.event.addListener(marker, 'click', function() {
+            markersArray.push(marker); //Adding markers to array, so later they can be removed.
+            google.maps.event.addListener(marker, 'click', function () {
 
                 infoBubble.close(); // Close previously opened infowindow
                 infoBubble.removeTab(0);
@@ -55,57 +55,47 @@ function initialize(jsonParsed) {
 }
 
 //All markers when are cleared off the map, by going through each marker and setting it to null on the map.
-function clearOverlays (){
-  for (let i = 0; i < markersArray.length; i++ ) {
-    markersArray[i].setMap(null);
-  }
-  markersArray = [];
+function clearOverlays() {
+    for (let i = 0; i < markersArray.length; i++) {
+        markersArray[i].setMap(null);
+    }
+    markersArray = [];
 }
 
 //Returns a promise. Loads the initial empty map
-let loadMap = function(){
-  var mapCanvas = document.getElementById('googleMap');
-  var styledMapType = mapStyle();
+let loadMap = function () {
+    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
 
-  return new Promise(function(resolve, reject){
-    var mapProp = {
-        center: centerLocation(),
-        zoom: 12
-    };
-    map = new google.maps.Map(mapCanvas, mapProp);
-    //set the style type
-    map.mapTypes.set('styled_map', styledMapType);
-    map.setMapTypeId('styled_map');
-
-    google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
-        resolve("Map Loaded")
-    });
-
-  });
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFsYmFyb24wIiwiYSI6ImNqbndkNmZpZjBpcmIza2tqN2M4N3RyeHQifQ.vDAQtwqKGBaKRW0xZG_Ggw', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.streets',
+        accessToken: 'your.mapbox.access.token'
+    }).addTo(mymap);
 };
 
-function centerLocation(){
+function centerLocation() {
 
-      //Depending on what user chooses as a borough, the map will focus on that location when user searches.
-      switch (offenseSearchDetail.offenseBorough) {
-          case "BROOKLYN":
-              return new google.maps.LatLng(40.650002, -73.949997);
-              break;
-          case "QUEENS":
-              return new google.maps.LatLng(40.742054, -73.769417);
-              break;
-          case "BRONX":
-               return new google.maps.LatLng(40.837048, -73.865433);
-              break;
-          case "STATEN ISLAND":
-              return new google.maps.LatLng(40.579021, -74.151535);
-              break;
-          case "MANHATTAN":
-              return new google.maps.LatLng(40.758896, -73.985130);
-              break;
-          default:
-              return new google.maps.LatLng(40.650002, -73.949997); //Brooklyn
-      }
+    //Depending on what user chooses as a borough, the map will focus on that location when user searches.
+    switch (offenseSearchDetail.offenseBorough) {
+        case "BROOKLYN":
+            return new google.maps.LatLng(40.650002, -73.949997);
+            break;
+        case "QUEENS":
+            return new google.maps.LatLng(40.742054, -73.769417);
+            break;
+        case "BRONX":
+            return new google.maps.LatLng(40.837048, -73.865433);
+            break;
+        case "STATEN ISLAND":
+            return new google.maps.LatLng(40.579021, -74.151535);
+            break;
+        case "MANHATTAN":
+            return new google.maps.LatLng(40.758896, -73.985130);
+            break;
+        default:
+            return new google.maps.LatLng(40.650002, -73.949997); //Brooklyn
+    }
 }
 
 //HTML for the info window when clicked on the marker.
@@ -131,10 +121,10 @@ function startRequest(myUrl) {
     console.log(myUrl);
     var promise = $.ajax({
         url: myUrl,
-        headers : {
-            'X-App-Token' : 'VxVfB1l051bDWPhFmrm2QeX9a'
+        headers: {
+            'X-App-Token': 'VxVfB1l051bDWPhFmrm2QeX9a'
         },
-      });
+    });
 
     return promise;
 };
@@ -173,21 +163,21 @@ function assignSearchSelection() {
 
 //event laaunched when search button is pressed. assignSearchSelection function assigns values to the keys in offenseSearchDetail object, which is then passed into
 //editUrlQuery which then inserts the value into the url and returns the url. startRequest makes an ajax call to the url.
-$(document).ready(function() {
-    document.getElementById("search_Button").addEventListener('click', function() {
+$(document).ready(function () {
+    document.getElementById("search_Button").addEventListener('click', function () {
 
         //$(".navbar").addClass("slideUp"); //jquery add class that translates nav bar to top of page
         assignSearchSelection.call(offenseSearchDetail);
 
         //startRequestFunc returns $.ajax object which is a promise, and using the .done function once the $.ajax receives the result
-        startRequest(editUrlQuery.call(offenseSearchDetail)).done(function(result){
-          console.log("Succes with the AJAX call")
-          clearOverlays(); //Clear any previous Markers on map
-          map.setCenter(centerLocation()); //center to the new location
-          initialize(result) //load the data on to the map
+        startRequest(editUrlQuery.call(offenseSearchDetail)).done(function (result) {
+            console.log("Succes with the AJAX call")
+            clearOverlays(); //Clear any previous Markers on map
+            map.setCenter(centerLocation()); //center to the new location
+            initialize(result) //load the data on to the map
 
-        }).fail(function(jqXHR, textStatus, errorThrown){
-          console.log("Error with the AJAX request: " + jqXHR.status + "  " + textStatus + "  " + errorThrown);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            console.log("Error with the AJAX request: " + jqXHR.status + "  " + textStatus + "  " + errorThrown);
         })
         //initialize(jsontext);
 
@@ -257,137 +247,135 @@ function fillOffenseTypeSelectElement() {
     }
 }
 
-function mapStyle(){
-  //black and white style for google maps https://snazzymaps.com/style/8097/wy
-  var styledMapType = new google.maps.StyledMapType(
-      [{
-          "featureType": "all",
-          "elementType": "geometry.fill",
-          "stylers": [{
-              "weight": "2.00"
-          }]
-      }, {
-          "featureType": "all",
-          "elementType": "geometry.stroke",
-          "stylers": [{
-              "color": "#9c9c9c"
-          }]
-      }, {
-          "featureType": "all",
-          "elementType": "labels.text",
-          "stylers": [{
-              "visibility": "on"
-          }]
-      }, {
-          "featureType": "landscape",
-          "elementType": "all",
-          "stylers": [{
-              "color": "#f2f2f2"
-          }]
-      }, {
-          "featureType": "landscape",
-          "elementType": "geometry.fill",
-          "stylers": [{
-              "color": "#ffffff"
-          }]
-      }, {
-          "featureType": "landscape.man_made",
-          "elementType": "geometry.fill",
-          "stylers": [{
-              "color": "#ffffff"
-          }]
-      }, {
-          "featureType": "poi",
-          "elementType": "all",
-          "stylers": [{
-              "visibility": "off"
-          }]
-      }, {
-          "featureType": "road",
-          "elementType": "all",
-          "stylers": [{
-              "saturation": -100
-          }, {
-              "lightness": 45
-          }]
-      }, {
-          "featureType": "road",
-          "elementType": "geometry.fill",
-          "stylers": [{
-              "color": "#eeeeee"
-          }]
-      }, {
-          "featureType": "road",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-              "color": "#7b7b7b"
-          }]
-      }, {
-          "featureType": "road",
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-              "color": "#ffffff"
-          }]
-      }, {
-          "featureType": "road.highway",
-          "elementType": "all",
-          "stylers": [{
-              "visibility": "simplified"
-          }]
-      }, {
-          "featureType": "road.arterial",
-          "elementType": "labels.icon",
-          "stylers": [{
-              "visibility": "off"
-          }]
-      }, {
-          "featureType": "transit",
-          "elementType": "all",
-          "stylers": [{
-              "visibility": "off"
-          }]
-      }, {
-          "featureType": "water",
-          "elementType": "all",
-          "stylers": [{
-              "color": "#46bcec"
-          }, {
-              "visibility": "on"
-          }]
-      }, {
-          "featureType": "water",
-          "elementType": "geometry.fill",
-          "stylers": [{
-              "color": "#c8d7d4"
-          }]
-      }, {
-          "featureType": "water",
-          "elementType": "labels.text.fill",
-          "stylers": [{
-              "color": "#070707"
-          }]
-      }, {
-          "featureType": "water",
-          "elementType": "labels.text.stroke",
-          "stylers": [{
-              "color": "#ffffff"
-          }]
-      }], {
-          name: 'Styled Map'
-      });
+function mapStyle() {
+    //black and white style for google maps https://snazzymaps.com/style/8097/wy
+    var styledMapType = new google.maps.StyledMapType(
+        [{
+            "featureType": "all",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "weight": "2.00"
+            }]
+        }, {
+            "featureType": "all",
+            "elementType": "geometry.stroke",
+            "stylers": [{
+                "color": "#9c9c9c"
+            }]
+        }, {
+            "featureType": "all",
+            "elementType": "labels.text",
+            "stylers": [{
+                "visibility": "on"
+            }]
+        }, {
+            "featureType": "landscape",
+            "elementType": "all",
+            "stylers": [{
+                "color": "#f2f2f2"
+            }]
+        }, {
+            "featureType": "landscape",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "landscape.man_made",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "poi",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "all",
+            "stylers": [{
+                "saturation": -100
+            }, {
+                "lightness": 45
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#eeeeee"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [{
+                "color": "#7b7b7b"
+            }]
+        }, {
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
+            "stylers": [{
+                "color": "#ffffff"
+            }]
+        }, {
+            "featureType": "road.highway",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "simplified"
+            }]
+        }, {
+            "featureType": "road.arterial",
+            "elementType": "labels.icon",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "transit",
+            "elementType": "all",
+            "stylers": [{
+                "visibility": "off"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "all",
+            "stylers": [{
+                "color": "#46bcec"
+            }, {
+                "visibility": "on"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "geometry.fill",
+            "stylers": [{
+                "color": "#c8d7d4"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [{
+                "color": "#070707"
+            }]
+        }, {
+            "featureType": "water",
+            "elementType": "labels.text.stroke",
+            "stylers": [{
+                "color": "#ffffff"
+            }]
+        }], {
+            name: 'Styled Map'
+        });
 
-      return styledMapType;
+    return styledMapType;
 }
 
 
-window.onload = function() {
+window.onload = function () {
     fillYearSelectElement();
     fillMonthSelectElement();
     fillBoroughSelectElement();
     fillOffenseTypeSelectElement();
 
     //Load google map on window load. Map is loaded once and not over and over again when search button is clicked.
-    loadMap().then(function(){
-      console.log("Map Loaded");
-    })
+    loadMap();
 }
