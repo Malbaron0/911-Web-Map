@@ -1,0 +1,23 @@
+{
+  "name": "911-web-map",
+  "version": "1.0.0",
+  "description": "Display crime data acorss New York",
+  "main": "911-map.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Malbaron0/911-Web-Map.git"
+  },
+  "author": "Malyar Baron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Malbaron0/911-Web-Map/issues"
+  },
+  "homepage": "https://github.com/Malbaron0/911-Web-Map#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "gulp": "^4.0.0"
+  }
+}

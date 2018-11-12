@@ -64,13 +64,13 @@ function clearOverlays() {
 
 //Returns a promise. Loads the initial empty map
 let loadMap = function () {
-    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    var mymap = L.map('mapid').setView([40.650002, -73.949997], 13);
 
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFsYmFyb24wIiwiYSI6ImNqbndkNmZpZjBpcmIza2tqN2M4N3RyeHQifQ.vDAQtwqKGBaKRW0xZG_Ggw', {
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets',
-        accessToken: 'your.mapbox.access.token'
+        accessToken: 'pk.eyJ1IjoibWFsYmFyb24wIiwiYSI6ImNqbndkNmZpZjBpcmIza2tqN2M4N3RyeHQifQ.vDAQtwqKGBaKRW0xZG_Ggw'
     }).addTo(mymap);
 };
 
